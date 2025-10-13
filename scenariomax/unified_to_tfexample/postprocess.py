@@ -5,6 +5,7 @@ from typing import Any
 from tqdm import tqdm
 
 from scenariomax import logger_utils
+from scenariomax.core.unified_scenario import UnifiedScenario
 from scenariomax.tf_utils import get_tensorflow
 from scenariomax.unified_to_tfexample import convert_to_tfexample, exceptions
 
@@ -54,6 +55,9 @@ def postprocess_tfexample(
                     dataset_name,
                     **kwargs,
                 )
+
+                if not isinstance(unified_scenario, UnifiedScenario):
+                    unified_scenario = UnifiedScenario.from_dict(unified_scenario)
 
                 dict_to_convert = convert_to_tfexample.convert(unified_scenario)
                 example = tf.train.Example(features=tf.train.Features(feature=dict_to_convert))

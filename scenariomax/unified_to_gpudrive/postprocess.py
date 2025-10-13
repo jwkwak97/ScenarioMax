@@ -7,6 +7,7 @@ from typing import Any
 from tqdm import tqdm
 
 from scenariomax import logger_utils
+from scenariomax.core.unified_scenario import UnifiedScenario
 from scenariomax.unified_to_gpudrive import convert_to_json
 
 
@@ -49,6 +50,9 @@ def postprocess_gpudrive(
                 dataset_name,
                 **kwargs,
             )
+
+            if not isinstance(unified_scenario, UnifiedScenario):
+                unified_scenario = UnifiedScenario.from_dict(unified_scenario)
 
             scenario_json = convert_to_json.convert(unified_scenario)
 

@@ -19,54 +19,78 @@ class UnifiedScenario(dict):
         "id": str,                    # Unique scenario identifier
 
         "dynamic_agents": {           # Dynamic objects (vehicles, pedestrians, etc.)
-            "obj_id": {
-                "type": str,          # From types.PARTICIPANT_TYPES
-                "states": {      # State data for each timestep
-                    "position": np.ndarray,    # (length, 3) - x, y
-                    "heading": np.ndarray,     # (length,) - heading angle
-                    "velocity": np.ndarray,    # (length, 2) - vx, vy
-                    "valid": np.ndarray,       # (length,) - boolean validity mask
+            "obj_id": {                 # Unique object identifier
+                "type": str,                # Type of participant
+                "states": {                 # State data for each timestep
+                    "position": np.ndarray,     # (length, 3) - x, y
+                    "heading": np.ndarray,      # (length,) - heading angle
+                    "velocity": np.ndarray,     # (length, 2) - vx, vy
+                    "length": np.ndarray,            # (length,) - Object length
+                    "width": np.ndarray,             # (length,) - Object width
+                    "height": np.ndarray,            # (length,) - Object height
+                    "valid": np.ndarray,        # (length,) - boolean validity mask
                 },
-                "length": float,           # Object length (optional)
-                "width": float,            # Object width (optional)
-                "height": float,           # Object height (optional)
-            }
+            },
         },
 
         "static_map_elements": {      # Static map features
-            "element_id": {
-                "type": str,          # From types.LANE_TYPES, ROAD_LINE_TYPES, etc.
-                "geometry": np.ndarray,    # (N, 3) - polyline points
-                "polyline": np.ndarray,    # (N, 3) - polyline points for line/lane
-                "speed_limit_mph": _lane.speed_limit_mph, # Speed limit in mph # lane only
-                "speed_limit_kmh": converter_utils.mph_to_kmh(_lane.speed_limit_mph), # Speed limit in km/h # lane only
-                "entry_lanes": list(_lane.entry_lanes),         # List of entry lane IDs # lane only
-                "exit_lanes": list(_lane.exit_lanes),           # List of exit lane IDs # lane only
-                "left_boundaries": _extract_boundaries(_lane.left_boundaries), # Extracted left boundaries
-                "right_boundaries": _extract_boundaries(_lane.right_boundaries),
-                "left_neighbor": _extract_neighbors(_lane.left_neighbors),
-                "right_neighbor": _extract_neighbors(_lane.right_neighbors),
-            }
+            "element_id": {             # str: Unique map element identifier
+                "type": str,                    # From types.LANE_TYPES, ROAD_LINE_TYPES, etc.
+                # IF TYPE IS LANE:
+                "polyline": np.ndarray,         # (N, 3) - (x, y, z)
+                "speed_limit_mph": float,       # Speed limit in mph # lane only
+                "speed_limit_kmh": float,       # Speed limit in km/h # lane only
+                "entry_lanes": list[int],       # List of entry lane IDs # lane only
+                "exit_lanes": list[int],        # List of exit lane IDs # lane only
+                "left_boundaries": list[int],   # Extracted left boundaries
+                "right_boundaries": list[int],  # Extracted right boundaries
+                "left_neighbor": list[int],     # IDs of left neighbor lanes
+                "right_neighbor": list[int],    # IDs of right neighbor lanes
+                # ELSE:
+                "polyline": np.ndarray,         # (N, 3) - (x, y, z)
+            },
         },
 
         "dynamic_map_elements": {     # Dynamic traffic light states
-            "element_id": {
-                "type": str,          # From types.TRAFFIC_LIGHT_TYPES
+            "element_id": {             # str: Unique traffic light identifier
+                "type": str,               # From types.TRAFFIC_LIGHT_TYPES
                 "position": np.ndarray,    # (3,) - x, y, z position
                 "states": list,            # (length,) - state at each timestep
-                "controlled_lanes": list,  # List of lane IDs controlled by this light
-            }
+                "lane": int,               # Controlled lane ID (if applicable)
+            },
         },
 
         "metadata": {                 # Additional scenario information
             "dataset_name": str,          # Source dataset name
             "dataset_version": str,       # Dataset version
+            "scenario_id": str,           # Original scenario identifier
+            "source_file": str,           # Original source file name
             "length": int,                # Number of timesteps
             "timesteps": np.ndarray,      # Timestamp array (length,)
             "ego_id": str,                # Self-driving car ID
-        }
+            # Waymo-specific
+            "current_frame_index": int,       # Current frame index
+            "sdc_track_index": int,           # SDC track index
+            "objects_of_interest": list[int], # List of object indices of interest
+            "tracks_to_predict": list[int],   # List of track indices to predict
+        },
     }
     """
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "UnifiedScenario":
+        """Create a UnifiedScenario from a dictionary."""
+        metadata = data.get("metadata", {}) or {}
+
+        scenario = cls(
+            scenario_id=data.get("id", ""),
+            dataset_name=metadata.get("dataset_name", data.get("dataset_name", "")),
+            dataset_version=metadata.get("dataset_version", data.get("dataset_version", "")),
+        )
+        for key, value in data.items():
+            scenario[key] = value
+
+        return scenario
 
     def __init__(self, scenario_id: str = "", dataset_name: str = "", dataset_version: str = ""):
         super().__init__()
