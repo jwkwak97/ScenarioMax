@@ -527,10 +527,7 @@ def _convert_to_target_format(scenarios: list[dict[str, Any]], target_format: st
             dataset_version="pickle",
             dataset_name=dataset_name,
             pbar=pbar,
-            process_scenario_func=lambda scenario, convert_func, dataset_version, dataset_name, **kwargs: (
-                scenario,
-                f"scenario_{hash(str(scenario))}.tmp",
-            ),
+            process_scenario_func=lambda scenario, convert_func, dataset_version, dataset_name, **kwargs: scenario,
         )
 
         pbar.close()
@@ -556,10 +553,7 @@ def _convert_to_target_format(scenarios: list[dict[str, Any]], target_format: st
             dataset_version="pickle",
             dataset_name=dataset_name,
             pbar=pbar,
-            process_scenario_func=lambda scenario, convert_func, dataset_version, dataset_name, **kwargs: (
-                scenario,
-                f"scenario_{hash(str(scenario))}.tmp",
-            ),
+            process_scenario_func=lambda scenario, convert_func, dataset_version, dataset_name, **kwargs: scenario,
         )
 
         pbar.close()

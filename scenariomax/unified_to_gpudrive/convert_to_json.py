@@ -69,6 +69,16 @@ def convert(unified_scenario):
             "average_distance_traveled": gpudrive_utils.ensure_scalar(np.mean(objects_distance_traveled)),
             "scenario_type": metadata["scenario_type"],  # for openscenes data this contains the scenario token
         }
+    else:
+        metadata = {
+            "dataset_name": metadata.get("dataset_name", ""),
+            "dataset_version": metadata.get("dataset_version", ""),
+            "scenario_id": metadata.get("scenario_id", scenario_id),
+            "source_file": metadata.get("source_file", ""),
+            "length": metadata.get("length", 0),
+            "timesteps": metadata.get("timesteps", []),
+            "ego_id": metadata.get("ego_id", ""),
+        }
 
     scenario_dict = {
         "name": f"{unified_scenario.export_file_name}.json",
