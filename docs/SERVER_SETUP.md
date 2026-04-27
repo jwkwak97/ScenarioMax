@@ -81,22 +81,22 @@ ImportError: /usr/lib/x86_64-linux-gnu/libstdc++.so.6: version `CXXABI_1.3.15' n
 ## 2. 데이터 경로
 
 > **주의**: 마운트된 볼륨 이름은 서버 환경마다 다를 수 있습니다 (예: `aitc-plan-team-1`, `aitc-plan-vmax-datavol-1` 등).  
-> 아래와 같이 `NUPLAN_ROOT`를 먼저 설정하면 이후 모든 명령어를 그대로 사용할 수 있습니다.
+> 아래와 같이 `NUPLAN_DATASETS_ROOT`를 먼저 설정하면 이후 모든 명령어를 그대로 사용할 수 있습니다.
 
 ```bash
 # 본인 환경에 맞게 수정
-export NUPLAN_ROOT=/home/jovyan/<마운트된-볼륨-이름>
+export NUPLAN_DATASETS_ROOT=/home/jovyan/<마운트된-볼륨-이름>
 ```
 
 | 항목 | 경로 |
 |------|------|
-| nuPlan DB | `${NUPLAN_ROOT}/data/cache/` |
-| nuPlan Maps | `${NUPLAN_ROOT}/nuplan-maps-v1.0/` |
+| nuPlan DB | `${NUPLAN_DATASETS_ROOT}/data/cache/` |
+| nuPlan Maps | `${NUPLAN_DATASETS_ROOT}/nuplan-maps-v1.0/` |
 | 출력 위치 | `/home/jovyan/workspace/vmax_data/nuplan_tfrecord/` |
 
 nuPlan DB 폴더 구조:
 ```
-${NUPLAN_ROOT}/data/cache/
+${NUPLAN_DATASETS_ROOT}/data/cache/
 ├── train_boston/      # 학습 데이터 (Boston)
 ├── train_pittsburgh/  # 학습 데이터 (Pittsburgh)
 ├── train_singapore/   # 학습 데이터 (Singapore)
@@ -113,10 +113,10 @@ ${NUPLAN_ROOT}/data/cache/
 
 ```bash
 LD_PRELOAD=/home/jovyan/.conda/envs/vmax/lib/libstdc++.so.6 \
-NUPLAN_MAPS_ROOT=${NUPLAN_ROOT}/nuplan-maps-v1.0 \
-NUPLAN_DATA_ROOT=${NUPLAN_ROOT}/data \
+NUPLAN_MAPS_ROOT=${NUPLAN_DATASETS_ROOT}/nuplan-maps-v1.0 \
+NUPLAN_DATA_ROOT=${NUPLAN_DATASETS_ROOT}/data \
 /home/jovyan/.conda/envs/scenariomax/bin/scenariomax-convert \
-  --nuplan_src ${NUPLAN_ROOT}/data/cache/train_boston \
+  --nuplan_src ${NUPLAN_DATASETS_ROOT}/data/cache/train_boston \
   --dst /home/jovyan/workspace/vmax_data/scenariomax_test \
   --target_format tfexample \
   --num_workers 4 \
@@ -131,10 +131,10 @@ NUPLAN_DATA_ROOT=${NUPLAN_ROOT}/data \
 
 ```bash
 LD_PRELOAD=/home/jovyan/.conda/envs/vmax/lib/libstdc++.so.6 \
-NUPLAN_MAPS_ROOT=${NUPLAN_ROOT}/nuplan-maps-v1.0 \
-NUPLAN_DATA_ROOT=${NUPLAN_ROOT}/data \
+NUPLAN_MAPS_ROOT=${NUPLAN_DATASETS_ROOT}/nuplan-maps-v1.0 \
+NUPLAN_DATA_ROOT=${NUPLAN_DATASETS_ROOT}/data \
 /home/jovyan/.conda/envs/scenariomax/bin/scenariomax-convert \
-  --nuplan_src ${NUPLAN_ROOT}/data/cache/train_boston \
+  --nuplan_src ${NUPLAN_DATASETS_ROOT}/data/cache/train_boston \
   --dst /home/jovyan/workspace/vmax_data/nuplan_tfrecord/train_boston \
   --target_format tfexample \
   --num_workers 8
@@ -151,10 +151,10 @@ tmux new -s scenariomax_convert
 
 # 세션 안에서 변환 실행
 LD_PRELOAD=/home/jovyan/.conda/envs/vmax/lib/libstdc++.so.6 \
-NUPLAN_MAPS_ROOT=${NUPLAN_ROOT}/nuplan-maps-v1.0 \
-NUPLAN_DATA_ROOT=${NUPLAN_ROOT}/data \
+NUPLAN_MAPS_ROOT=${NUPLAN_DATASETS_ROOT}/nuplan-maps-v1.0 \
+NUPLAN_DATA_ROOT=${NUPLAN_DATASETS_ROOT}/data \
 /home/jovyan/.conda/envs/scenariomax/bin/scenariomax-convert \
-  --nuplan_src ${NUPLAN_ROOT}/data/cache/train_boston \
+  --nuplan_src ${NUPLAN_DATASETS_ROOT}/data/cache/train_boston \
   --dst /home/jovyan/workspace/vmax_data/nuplan_tfrecord/train_boston \
   --target_format tfexample \
   --num_workers 8
