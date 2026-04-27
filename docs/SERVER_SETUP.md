@@ -174,6 +174,10 @@ NUPLAN_DATA_ROOT=${NUPLAN_DATASETS_ROOT}/data \
 
 ### V-Max에서 사용하기
 
+#### 동작 확인용 (빠른 테스트, ~6분)
+
+소규모 변환 결과(`--num_files 10`)로 동작을 먼저 확인할 때 사용합니다.
+
 ```bash
 cd /home/jovyan/workspace/V-Max
 
@@ -181,8 +185,24 @@ cd /home/jovyan/workspace/V-Max
   algorithm=td3_trajectory \
   "network/encoder=wayformer" \
   path_dataset=/home/jovyan/workspace/vmax_data/scenariomax_test/training.tfrecord \
+  use_wandb=false \
+  total_timesteps=50000 \
+  log_freq=1
+```
+
+#### 전체 학습 (전체 데이터셋 변환 완료 후)
+
+```bash
+cd /home/jovyan/workspace/V-Max
+
+/home/jovyan/.conda/envs/vmax/bin/python vmax/scripts/training/train.py \
+  algorithm=td3_trajectory \
+  "network/encoder=wayformer" \
+  path_dataset=/home/jovyan/workspace/vmax_data/nuplan_tfrecord/train_boston/training.tfrecord \
   use_wandb=false
 ```
+
+> **주의**: `total_timesteps` 기본값(20,000,000)으로 wayformer 학습 시 약 10시간 소요.
 
 ---
 
