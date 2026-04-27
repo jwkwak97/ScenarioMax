@@ -180,7 +180,7 @@ cd /home/jovyan/workspace/V-Max
 /home/jovyan/.conda/envs/vmax/bin/python vmax/scripts/training/train.py \
   algorithm=td3_trajectory \
   "network/encoder=wayformer" \
-  path_dataset=/home/jovyan/workspace/vmax_data/nuplan_tfrecord/train_boston/training.tfrecord \
+  path_dataset=/home/jovyan/workspace/vmax_data/scenariomax_test/training.tfrecord \
   use_wandb=false
 ```
 
