@@ -206,6 +206,7 @@ cd /home/jovyan/workspace/V-Max
 | `libGL.so.1 not found` | GUI 버전 OpenCV 사용 | `pip install opencv-python-headless` |
 | `numpy 2.x incompatible` | numpy 버전 자동 업그레이드 | `pip install "numpy<2"` |
 | `UserWarning: _self_ missing` | hydra 1.1 경고 | 무시해도 됨 (동작에 영향 없음) |
+| `ModuleNotFoundError: No module named 'pkg_resources'` | setuptools 70+ 에서 pkg_resources 누락 | `pip install "setuptools==69.5.1"` |
 
 ---
 
